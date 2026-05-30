@@ -1,41 +1,46 @@
 let lastData = "";
 
 async function loadStock() {
-  const res = await fetch("http://localhost:5000/api/products");
-  const data = await res.json();
+  try {
+    const res = await fetch("http://localhost:5000/api/products");
+    const data = await res.json();
 
-  const newDataString = JSON.stringify(data);
+    const newDataString = JSON.stringify(data);
+    if (newDataString === lastData) return;
+    lastData = newDataString;
 
-  // only update if data changed
-  if (newDataString === lastData) return;
+    const table = document.getElementById("stockTable");
+    table.innerHTML = "";
 
-  lastData = newDataString;
+    data.forEach(item => {
+      let status = "";
+      let className = "";
 
-  const table = document.getElementById("stockTable");
-  table.innerHTML = "";
+      if (item.quantity > 100) {
+        status = "Good";
+        className = "good";
+      } else if (item.quantity >= 30) {
+        status = "Medium";
+        className = "medium";
+      } else {
+        status = "Low";
+        className = "low";
+      }
 
-  data.forEach(item => {
-    let status = "";
-    let className = "";
+      table.innerHTML += `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.quantity}</td>
+          <td>₹${item.price}</td>
+          <td><span class="${className}">${status}</span></td>
+        </tr>
+      `;
+    });
 
-    if (item.quantity > 100) {
-      status = "Good";
-      className = "good";
-    } else if (item.quantity >= 30) {
-      status = "Medium";
-      className = "medium";
-    } else {
-      status = "Low";
-      className = "low";
-    }
-
-    table.innerHTML += `
-      <tr>
-        <td>${item.name}</td>
-        <td>${item.quantity}</td>
-        <td>₹${item.price}</td>
-        <td class="${className}">${status}</td>
-      </tr>
-    `;
-  });
+  } catch (err) {
+    console.error("Error loading stock:", err);
+  }
 }
+
+loadStock();
+setInterval(loadStock, 5000);
