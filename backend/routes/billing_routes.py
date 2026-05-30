@@ -1,11 +1,11 @@
 from flask import Blueprint, jsonify
 from database.databse import get_connection
 
-dashboard_bp = Blueprint("dashboard", __name__)
+billing_bp = Blueprint("billing", __name__)
 
 
-@dashboard_bp.route("/api/dashboard", methods=["GET"])
-def dashboard_summary():
+@billing_bp.route("/api/billing", methods=["GET"])
+def billing_summary():
 
     try:
 
