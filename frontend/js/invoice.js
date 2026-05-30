@@ -79,7 +79,7 @@ function populateInvoice(bill) {
         );
 
     const products =
-        bill.product_name || [];
+        bill.product_name || bill.products || [];
 
     let subtotal = 0;
 

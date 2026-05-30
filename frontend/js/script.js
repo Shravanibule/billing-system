@@ -19,7 +19,7 @@ async function loadStock() {
     // Build rows in memory first to prevent excessive DOM reflows
     let tableHTML = "";
 
-    data.forEach(item => {
+    data.recent_products.forEach(item => {
       let status = "";
       let className = "";
 
