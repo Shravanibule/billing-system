@@ -1,4 +1,4 @@
-const API_URL = "https://billing-system-a5tf.onrender.com/api/bills";
+const API_URL = "http://127.0.0.1:5000/api/bills";
 const billContainer = document.getElementById("billContainer");
 const searchInput = document.getElementById("searchInput");
 let bills = [];

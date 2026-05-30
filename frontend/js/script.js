@@ -7,7 +7,7 @@ function goTo(page) {
 
 async function loadStock() {
   try {
-    const res = await fetch("https://billing-system-a5tf.onrender.com/api/dashboard")
+    const res = await fetch("http://127.0.0.1:5000/api/dashboard")
     const data = await res.json();
 
     const newDataString = JSON.stringify(data);

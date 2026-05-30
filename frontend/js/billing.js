@@ -1,4 +1,4 @@
-const API_BASE = "https://billing-system-a5tf.onrender.com";
+const API_BASE = "http://127.0.0.1:5000";
 
 const state = {
     products: [],
