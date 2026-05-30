@@ -3,42 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>Cloth House Dashboard</title>
-
-  <!-- FIXED CSS PATH -->
   <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
 
 <div class="container">
 
-  <!-- HEADER -->
   <div class="header">
     <h2>Shree Cloth House</h2>
     <p>Billing & Inventory System</p>
   </div>
 
-  <!-- NAV CARDS -->
   <div class="nav-cards">
-    
-    <div class="card" onclick="goTo('bill.html')">
+    <div class="card" onclick="goTo('billing.html')">
       <h3>🧾 Bill</h3>
       <p>Create customer bill</p>
     </div>
-
     <div class="card" onclick="goTo('stock.html')">
       <h3>📦 Add Stock</h3>
       <p>Update inventory</p>
     </div>
-
     <div class="card" onclick="goTo('history.html')">
       <h3>📜 History</h3>
       <p>Past bills & invoices</p>
     </div>
-
   </div>
 
-  <!-- STOCK TABLE -->
   <div class="section-title">Available Stock</div>
 
   <table>
@@ -50,14 +40,11 @@
         <th>Status</th>
       </tr>
     </thead>
-
     <tbody id="stockTable"></tbody>
   </table>
 
 </div>
 
-<!-- JS FILE -->
 <script src="../js/script.js"></script>
-
 </body>
 </html>
