@@ -19,13 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         // For testing/debugging purposes on frontend layout stage
-        console.log("Captured Frontend Stock Data:", formData);
+        console.log("Sending Frontend Stock Data to Backend:", formData);
 
         // ──────────────────────────────────────────────────────────────
-        // ─── INTEGRATE YOUR BACKEND API ROUTE HERE (FUTURE TASK) ───
+        // 🔥 YOUR BACKEND API ROUTE IS NOW ACTIVE
         // ──────────────────────────────────────────────────────────────
-        /*
-        fetch('http://127.0.0.1:5000/api/add-stock', {  // Replace with your real backend server URL
+        fetch('http://127.0.0.1:5000/api/add-stock', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,22 +33,20 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
-            alert(`${formData.product_name} successfully saved to database!`);
-            stockForm.reset(); // Clear the form fields so you can add another product immediately
-            document.getElementById('product_name').focus(); // Put typing cursor back on the first field
+            // Shows the custom message sent back by your APP.PY server
+            alert(data.message);
+
+            // Clears the form fields so you can add another product immediately
+            stockForm.reset(); 
+
+            // Automatically puts typing cursor back on the first field
+            document.getElementById('product_name').focus(); 
         })
         .catch(error => {
             console.error("API Error occurred:", error);
             alert("Failed to communicate with backend server!");
         });
-        */
         // ──────────────────────────────────────────────────────────────
-
-        // Clears the form for the next product instead of leaving the page
-        stockForm.reset(); 
-        
-        // Automatically places cursor back in the "Product Name" input field
-        document.getElementById('product_name').focus(); 
     });
 
     // 2. Handle Clear Button Click Action
