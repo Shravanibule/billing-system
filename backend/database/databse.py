@@ -1,8 +1,6 @@
-import os
 import sqlite3
 
-BASE_DIR = os.path.dirname(__file__)
-DATABASE = os.path.join(BASE_DIR, "cloth.db")
+DATABASE = "database/cloth.db"
 
 
 def get_connection():
@@ -28,6 +26,7 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS bills(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        bill_id TEXT UNIQUE,
         customer_name TEXT NOT NULL,
         mobile TEXT NOT NULL,
         payment_mode TEXT NOT NULL,
@@ -48,6 +47,19 @@ def init_db():
         FOREIGN KEY(product_id) REFERENCES products(id)
     )
     """)
+
+    cursor.execute("PRAGMA table_info(bills)")
+    bill_columns = [row[1] for row in cursor.fetchall()]
+    if "bill_id" not in bill_columns:
+        cursor.execute("ALTER TABLE bills ADD COLUMN bill_id TEXT")
+        cursor.execute("UPDATE bills SET bill_id = 'BILL-' || id WHERE bill_id IS NULL")
+
+    cursor.execute("PRAGMA table_info(products)")
+    product_columns = [row[1] for row in cursor.fetchall()]
+    if "created_at" not in product_columns:
+        cursor.execute(
+            "ALTER TABLE products ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+        )
 
     conn.commit()
     conn.close()
