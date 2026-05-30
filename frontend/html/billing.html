@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Bill — Shree Cloth House</title>
+  <link rel="stylesheet" href="../css/billing.css" />
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <button class="btn-back" onclick="window.history.back()">← Back</button>
+    <span class="topbar-title">New Bill</span>
+  </div>
+
+  <div class="page-container">
+
+    <!-- CUSTOMER DETAILS -->
+    <section class="card" id="customer-card">
+      <div class="card-header">
+        <span class="card-icon">👤</span>
+        <span class="card-label">CUSTOMER DETAILS</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Customer name</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Enter customer name"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Mobile</label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="10-digit number"
+            maxlength="10"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="payment_mode">Payment mode</label>
+
+        <div class="select-wrapper">
+          <select id="payment_mode">
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Card</option>
+          </select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="card" id="products-card">
+      <div class="card-header">
+        <span class="card-icon">🏷️</span>
+        <span class="card-label">PRODUCTS</span>
+      </div>
+
+      <div class="form-group">
+        <label>Select items</label>
+
+        <div class="search-box">
+          <input
+            type="text"
+            id="product-search"
+            placeholder="Tap to select items..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="product-list" id="product_name">
+          <!-- JS renders products here -->
+        </div>
+      </div>
+
+      <div class="total-row">
+        <span class="total-label">Total amount</span>
+        <span class="total-value" id="total_amount">₹0</span>
+
+        <input
+          type="hidden"
+          id="total_amount_val"
+          value="0"
+        />
+      </div>
+    </section>
+
+    <!-- DISCOUNT -->
+    <section class="card" id="discount-card">
+      <div class="card-header">
+        <span class="card-icon">🏷</span>
+        <span class="card-label">DISCOUNT</span>
+      </div>
+
+      <div class="form-group">
+        <label for="discount">Discount (%)</label>
+        <input
+          type="number"
+          id="discount"
+          min="0"
+          max="100"
+          value="0"
+          placeholder="0"
+        />
+      </div>
+
+      <div
+        class="final-row"
+        id="final-row"
+        style="display:none;"
+      >
+        <span class="final-label">Final Amount</span>
+        <span class="final-value" id="final_amount">₹0</span>
+      </div>
+    </section>
+
+    <!-- ACTION BUTTONS -->
+    <div class="bottom-bar">
+      <button class="btn-cancel" id="btn-cancel">
+        Cancel
+      </button>
+
+      <button class="btn-generate" id="btn-generate">
+        Generate Invoice
+      </button>
+    </div>
+
+  </div>
+
+  <script src="../js/billing.js"></script>
+
+</body>
+</html>
