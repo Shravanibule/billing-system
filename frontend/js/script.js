@@ -2,7 +2,7 @@ let lastData = "";
 
 async function loadStock() {
   try {
-    const res = await fetch("http://localhost:5000/api/products");
+    const res = await fetch("http://127.0.0.1:5000/api/dashboard")
     const data = await res.json();
 
     const newDataString = JSON.stringify(data);
@@ -29,7 +29,7 @@ async function loadStock() {
 
       table.innerHTML += `
         <tr>
-          <td>${item.name}</td>
+          <td>${item.product_name}</td>
           <td>${item.quantity}</td>
           <td>₹${item.price}</td>
           <td><span class="${className}">${status}</span></td>
