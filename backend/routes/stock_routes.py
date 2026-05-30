@@ -31,25 +31,46 @@ def add_stock():
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO products
-            (
+            SELECT id, quantity
+            FROM products
+            WHERE product_name = ?
+        """, (product_name,))
+        existing = cursor.fetchone()
+
+        if existing:
+            updated_quantity = existing["quantity"] + quantity
+            cursor.execute("""
+                UPDATE products
+                SET quantity = ?, price = ?
+                WHERE id = ?
+            """, (
+                updated_quantity,
+                price,
+                existing["id"]
+            ))
+            message = f"{product_name} updated successfully"
+        else:
+            cursor.execute("""
+                INSERT INTO products
+                (
+                    product_name,
+                    quantity,
+                    price
+                )
+                VALUES (?, ?, ?)
+            """, (
                 product_name,
                 quantity,
                 price
-            )
-            VALUES (?, ?, ?)
-        """, (
-            product_name,
-            quantity,
-            price
-        ))
+            ))
+            message = f"{product_name} added successfully"
 
         conn.commit()
         conn.close()
 
         return jsonify({
             "success": True,
-            "message": f"{product_name} added successfully"
+            "message": message
         })
 
     except Exception as e:
