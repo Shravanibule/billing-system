@@ -1,10 +1,7 @@
 from flask import Blueprint, jsonify
 from database.databse import get_connection
-import sqlite3
 
-history_bp = Blueprint("history", __name__)
-
-DATABASE = "database/clothhouse.db"
+history_bp = Blueprint("history", _name_)
 
 
 @history_bp.route("/api/bills", methods=["GET"])
@@ -12,26 +9,26 @@ def get_all_bills():
 
     try:
 
-        conn = sqlite3.connect(DATABASE)
-        conn.row_factory = sqlite3.Row
-
+        conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute("""
             SELECT
-                id,
-                bill_id,
-                customer_name,
-                mobile,
-                product_name,
-                quantity,
-                price,
-                payment_mode,
-                total_amount,
-                discount,
-                bill_date
-            FROM bills
-            ORDER BY id DESC
+                b.id AS id,
+                b.bill_id AS bill_id,
+                b.customer_name AS customer_name,
+                b.mobile AS mobile,
+                p.product_name AS product_name,
+                bi.quantity AS quantity,
+                bi.price AS price,
+                b.payment_mode AS payment_mode,
+                b.total_amount AS total_amount,
+                b.discount AS discount,
+                b.bill_date AS bill_date
+            FROM bills b
+            JOIN bill_items bi ON bi.bill_id = b.id
+            JOIN products p ON p.id = bi.product_id
+            ORDER BY b.id DESC
         """)
 
         rows = cursor.fetchall()
