@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from database.databse import get_connection
 
-dashboard_bp = Blueprint("dashboard",__name__)
+dashboard_bp = Blueprint("dashboard", __name__)
 
 
 @dashboard_bp.route("/api/products", methods=["GET"])

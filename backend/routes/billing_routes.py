@@ -18,7 +18,7 @@ def create_bill():
         bill_date = data.get("bill_date")
         products = data.get("products", [])
 
-        if not customer_name or not mobile or not total_amount or not products:
+        if not customer_name or not mobile or total_amount is None or not products:
             return jsonify({
                 "success": False,
                 "message": "Missing bill data"

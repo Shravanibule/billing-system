@@ -26,8 +26,8 @@ def get_all_bills():
                 b.discount AS discount,
                 b.bill_date AS bill_date
             FROM bills b
-            JOIN bill_items bi ON bi.bill_id = b.id
-            JOIN products p ON p.id = bi.product_id
+            LEFT JOIN bill_items bi ON bi.bill_id = b.id
+            LEFT JOIN products p ON p.id = bi.product_id
             ORDER BY b.id DESC
         """)
 
