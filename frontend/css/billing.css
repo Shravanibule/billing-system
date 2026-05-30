@@ -189,14 +189,62 @@ select:focus { border-color: var(--border-focus); }
 }
 
 /* ---- Search Box ---- */
+.product-dropdown {
+  position: relative;
+}
+
+.search-box {
+  position: relative;
+}
+
 .search-box input {
   background: var(--accent-light);
   border-color: #c7d4f5;
 }
 .search-box input:focus { border-color: var(--border-focus); }
 
+.product-dropdown .select-arrow {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.dropdown-close-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+}
+
+.dropdown-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.selected-summary {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
 /* ---- Product List ---- */
 .product-list {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   max-height: 240px;
@@ -205,6 +253,11 @@ select:focus { border-color: var(--border-focus); }
   scrollbar-width: thin;
   scrollbar-color: #c1c8d4 transparent;
   margin-top: 0;
+  box-shadow: 0 12px 28px rgba(29, 41, 70, 0.08);
+}
+
+.product-dropdown.open .product-list {
+  display: block;
 }
 
 .product-list::-webkit-scrollbar { width: 7px; }
@@ -368,4 +421,22 @@ select:focus { border-color: var(--border-focus); }
 
 @media (min-width: 741px) {
   .page-container { padding: 24px 20px; }
+}
+
+/* ---- Fix alignment layout inside product drop-down list rows ---- */
+.product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes name/price to the left and quantity controls to the right */
+  gap: 12px;
+}
+
+.product-item-label {
+  flex: 1;
+  text-align: left;
+}
+
+.product-item-price {
+  margin-right: 10px;
+  white-space: nowrap;
 }

@@ -2,11 +2,14 @@ const API_BASE = "http://127.0.0.1:5000";
 
 const state = {
     products: [],
-    selected: {}
+    selected: {} // State shape maintained safely: { [productId]: quantity }
 };
 
 const productContainer = document.getElementById("product_name");
+const productDropdown = document.querySelector(".product-dropdown");
 const productSearch = document.getElementById("product-search");
+const productDropdownClose = document.getElementById("productDropdownClose");
+const selectedSummary = document.getElementById("selectedSummary");
 const discountEl = document.getElementById("discount");
 const totalAmountText = document.getElementById("total_amount");
 const finalAmountText = document.getElementById("final_amount");
@@ -17,24 +20,29 @@ const nameInput = document.getElementById("name");
 const phoneInput = document.getElementById("phone");
 const paymentModeSelect = document.getElementById("payment_mode");
 
+// Generates structural markup using your design's exact CSS classes
 function createProductHtml(product) {
-    const selectedQty = state.selected[product.id] || 0;
+    const isSelected = state.selected[product.id] !== undefined;
+    const selectedQty = state.selected[product.id] || 1;
+
     return `
-        <div class="product-item" data-id="${product.id}">
-            <div class="product-row">
-                <div class="product-name">${escapeHtml(product.product_name)}</div>
-                <div class="product-price">₹${product.price}</div>
-            </div>
-            <div class="product-actions">
-                <label>Qty</label>
-                <input
-                    type="number"
-                    min="0"
-                    value="${selectedQty}"
-                    class="product-qty"
-                    data-id="${product.id}"
-                />
-            </div>
+        <div class="product-item ${isSelected ? 'selected' : ''}" data-id="${product.id}">
+            <input 
+                type="checkbox" 
+                class="product-checkbox" 
+                data-id="${product.id}" 
+                ${isSelected ? 'checked' : ''} 
+            />
+            <div class="product-item-label">${escapeHtml(product.product_name)}</div>
+            <div class="product-item-price">₹${product.price}/unit</div>
+            
+            ${isSelected ? `
+                <div class="qty-control" data-id="${product.id}">
+                    <button type="button" class="qty-btn minus-btn">—</button>
+                    <span class="qty-val">${selectedQty}</span>
+                    <button type="button" class="qty-btn plus-btn">+</button>
+                </div>
+            ` : ''}
         </div>`;
 }
 
@@ -42,6 +50,33 @@ function escapeHtml(value) {
     const div = document.createElement("div");
     div.textContent = value;
     return div.innerHTML;
+}
+
+function openProductDropdown() {
+    if (!productDropdown) return;
+    productDropdown.classList.add("open");
+}
+
+function closeProductDropdown() {
+    if (!productDropdown) return;
+    productDropdown.classList.remove("open");
+}
+
+function toggleProductDropdown() {
+    if (!productDropdown) return;
+    productDropdown.classList.toggle("open");
+}
+
+function updateSelectedSummary() {
+    if (!selectedSummary) return;
+    const selectedCount = Object.keys(state.selected).length;
+    if (selectedCount === 0) {
+        selectedSummary.textContent = "No items selected";
+    } else if (selectedCount === 1) {
+        selectedSummary.textContent = "1 item selected";
+    } else {
+        selectedSummary.textContent = `${selectedCount} items selected`;
+    }
 }
 
 async function fetchProducts() {
@@ -54,6 +89,7 @@ async function fetchProducts() {
         state.products = products;
         renderProducts(products);
         updateTotals();
+        updateSelectedSummary();
     } catch (error) {
         console.error("Unable to load products:", error);
         if (productContainer) {
@@ -83,22 +119,66 @@ function onSearchChange() {
         product.product_name.toLowerCase().includes(searchValue)
     );
     renderProducts(filtered);
+    openProductDropdown();
 }
 
-function onQuantityInput(event) {
-    const target = event.target;
-    if (!target.classList.contains("product-qty")) return;
+// Custom handler for selecting rows and stepping quantities up/down
+function handleProductClick(event) {
+    const itemRow = event.target.closest(".product-item");
+    if (!itemRow) return;
 
-    const productId = target.dataset.id;
-    const quantity = parseInt(target.value, 10) || 0;
+    const productId = itemRow.dataset.id;
 
-    if (quantity > 0) {
-        state.selected[productId] = quantity;
-    } else {
-        delete state.selected[productId];
+    // Clicked minus button
+    if (event.target.classList.contains("minus-btn")) {
+        event.stopPropagation();
+        if (state.selected[productId] > 1) {
+            state.selected[productId]--;
+        } else {
+            delete state.selected[productId];
+        }
+        refreshVisibleRow(productId);
+        updateTotals();
+        return;
     }
 
+    // Clicked plus button
+    if (event.target.classList.contains("plus-btn")) {
+        event.stopPropagation();
+        state.selected[productId]++;
+        refreshVisibleRow(productId);
+        updateTotals();
+        return;
+    }
+
+    // Ignore raw numeric-label surface clicks
+    if (event.target.classList.contains("qty-control") || event.target.classList.contains("qty-val")) {
+        return;
+    }
+
+    // Toggle overall item row checkbox selection status
+    if (state.selected[productId] !== undefined) {
+        delete state.selected[productId];
+    } else {
+        state.selected[productId] = 1;
+    }
+    
+    refreshVisibleRow(productId);
     updateTotals();
+}
+
+// In-place UI row replacement logic so screen-scroll state doesn't jitter
+function refreshVisibleRow(productId) {
+    const product = state.products.find(item => item.id == productId);
+    if (!product) return;
+    
+    const oldRow = productContainer.querySelector(`.product-item[data-id="${productId}"]`);
+    if (oldRow) {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = createProductHtml(product);
+        const newRow = wrapper.firstElementChild;
+        oldRow.replaceWith(newRow);
+    }
 }
 
 function getSelectedProducts() {
@@ -129,6 +209,7 @@ function updateTotals() {
     if (totalAmountText) totalAmountText.textContent = `₹${total}`;
     if (finalAmountText) finalAmountText.textContent = `₹${finalTotal}`;
     if (totalAmountVal) totalAmountVal.value = total;
+    updateSelectedSummary();
 }
 
 function validateBill() {
@@ -208,11 +289,29 @@ async function createBill() {
 
 function bindEvents() {
     if (productSearch) {
+        productSearch.addEventListener("focus", openProductDropdown);
+        productSearch.addEventListener("click", (event) => {
+            event.stopPropagation();
+            openProductDropdown();
+        });
         productSearch.addEventListener("input", onSearchChange);
+        productSearch.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeProductDropdown();
+            }
+        });
     }
 
+    if (productDropdownClose) {
+        productDropdownClose.addEventListener("click", (event) => {
+            event.stopPropagation();
+            closeProductDropdown();
+        });
+    }
+
+    // Handles row interaction, custom check-switches, and count manipulation safely
     if (productContainer) {
-        productContainer.addEventListener("input", onQuantityInput);
+        productContainer.addEventListener("click", handleProductClick);
     }
 
     if (discountEl) {
