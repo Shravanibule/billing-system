@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from database.databse import get_connection
 import uuid
 
-billing_bp = Blueprint("billing", _name_)
+billing_bp = Blueprint("billing", __name__)
 
 
 @billing_bp.route("/api/bills", methods=["POST"])

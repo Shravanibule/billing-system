@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from database.databse import get_connection
 
-history_bp = Blueprint("history", _name_)
+history_bp = Blueprint("history", __name__)
 
 
 @history_bp.route("/api/bills", methods=["GET"])
