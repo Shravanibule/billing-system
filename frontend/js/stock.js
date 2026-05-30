@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ──────────────────────────────────────────────────────────────
         // 🔥 YOUR BACKEND API ROUTE IS NOW ACTIVE
         // ──────────────────────────────────────────────────────────────
-        fetch('http://127.0.0.1:5000/api/add-stock', {  
+        fetch('https://billing-system-a5tf.onrender.com/api/add-stock', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
