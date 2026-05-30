@@ -14,9 +14,9 @@ body {
     flex-direction: column;
 }
 
-/* Page Wrapper - Modified to remove side strips completely */
+/* Page Wrapper - Takes up full screen width smoothly */
 .page-wrapper {
-    width: 100%;        /* Takes up full screen width */
+    width: 100%;
     background: #ffffff;
     min-height: 100vh;
     display: flex;
@@ -28,7 +28,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 40px; /* Enhanced horizontal padding for a wide layout look */
+    padding: 20px 40px;
     border-bottom: 1px solid #e2e8f0;
     background: #ffffff;
 }
@@ -62,16 +62,9 @@ body {
     margin-left: 24px;
 }
 
-.more-options {
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 20px;
-    letter-spacing: 1px;
-}
-
 /* Content Layout Area */
 .content-area {
-    padding: 40px 40px; /* Keeps consistent margins away from screen edges */
+    padding: 40px 40px;
     flex-grow: 1;
     background-color: #f8fafc;
 }
@@ -101,7 +94,7 @@ body {
 /* Desktop Grid Form Layout (3 Columns side-by-side stretching smoothly) */
 .form-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr; /* Name gets more space, Qty and Price share the rest */
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 24px;
 }
 
@@ -178,24 +171,22 @@ input::placeholder {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   RESPONSIVE DESIGN (Media Queries for Screen Size Changes)
+    RESPONSIVE DESIGN (Media Queries for Screen Size Changes)
    ────────────────────────────────────────────────────────────── */
 
-/* For Small Laptops or Tablets (Screens smaller than 900px wide) */
 @media (max-width: 900px) {
     .header, .content-area {
         padding-left: 24px;
         padding-right: 24px;
     }
     .form-grid {
-        grid-template-columns: 1fr 1fr; /* Switch to 2 columns layout */
+        grid-template-columns: 1fr 1fr;
     }
     .full-width {
-        grid-column: span 2; /* Product name stretches across both columns */
+        grid-column: span 2;
     }
 }
 
-/* For Mobile/Small Screen Sizes (Screens smaller than 600px wide) */
 @media (max-width: 600px) {
     .header, .content-area {
         padding: 16px;
@@ -204,13 +195,13 @@ input::placeholder {
         padding: 20px;
     }
     .form-grid {
-        grid-template-columns: 1fr; /* Collapse down to 1 single column stacking vertically */
+        grid-template-columns: 1fr;
     }
     .full-width {
         grid-column: span 1;
     }
     .actions-footer {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Buttons split equal width at bottom of screens */
+        grid-template-columns: 1fr 1fr;
     }
 }

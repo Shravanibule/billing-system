@@ -6,16 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
     stockForm.addEventListener('submit', function(e) {
         e.preventDefault(); // Prevents the browser from instantly reloading the page
 
-        // Capture data from user input fields
-        const productName = document.getElementById('productName').value.trim();
-        const quantity = document.getElementById('quantity').value;
-        const pricePerUnit = document.getElementById('pricePerUnit').value;
+        // Capture data from user input fields using your team's exact variable names
+        const productName = document.getElementById('product_name').value.trim();
+        const quantityAmount = parseInt(document.getElementById('quantity').value);
+        const priceAmount = parseFloat(document.getElementById('price').value);
 
-        // Structure data into an object format
+        // Structure data into an object format matching your team's backend keys
         const formData = {
-            name: productName,
-            qty: quantity,
-            price: pricePerUnit
+            product_name: productName,
+            quantity: quantityAmount,
+            price: priceAmount
         };
 
         // For testing/debugging purposes on frontend layout stage
@@ -34,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
-            alert(`${productName} successfully saved to database!`);
+            alert(`${formData.product_name} successfully saved to database!`);
             stockForm.reset(); // Clear the form fields so you can add another product immediately
-            document.getElementById('productName').focus(); // Put typing cursor back on the first field
+            document.getElementById('product_name').focus(); // Put typing cursor back on the first field
         })
         .catch(error => {
             console.error("API Error occurred:", error);
@@ -45,11 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
         */
         // ──────────────────────────────────────────────────────────────
 
-       
+        // Clears the form for the next product instead of leaving the page
+        stockForm.reset(); 
         
-        
-        stockForm.reset(); // <-- THIS IS THE FIX: Clears the form for the next product instead of leaving the page!
-        document.getElementById('productName').focus(); // Automatically places cursor back in the "Product Name" input field
+        // Automatically places cursor back in the "Product Name" input field
+        document.getElementById('product_name').focus(); 
     });
 
     // 2. Handle Clear Button Click Action
