@@ -29,6 +29,30 @@ def create_bill():
 
         bill_id = f"BILL-{uuid.uuid4().hex[:8].upper()}"
 
+        # Validate stock availability before creating the bill.
+        for item in products:
+            product_id = item.get("id")
+            quantity = int(item.get("quantity", 0))
+
+            cursor.execute(
+                "SELECT quantity FROM products WHERE id = ?",
+                (product_id,)
+            )
+            product_row = cursor.fetchone()
+            if not product_row:
+                conn.close()
+                return jsonify({
+                    "success": False,
+                    "message": f"Product not found: {product_id}"
+                }), 400
+
+            if product_row["quantity"] < quantity:
+                conn.close()
+                return jsonify({
+                    "success": False,
+                    "message": f"Insufficient stock for product ID {product_id}."
+                }), 400
+
         cursor.execute("""
             INSERT INTO bills(
                 bill_id,
@@ -53,6 +77,9 @@ def create_bill():
         saved_bill_id = cursor.lastrowid
 
         for item in products:
+            product_id = item.get("id")
+            quantity = int(item.get("quantity", 0))
+
             cursor.execute("""
                 INSERT INTO bill_items(
                     bill_id,
@@ -63,10 +90,15 @@ def create_bill():
                 VALUES(?,?,?,?)
             """, (
                 saved_bill_id,
-                item.get("id"),
-                item.get("quantity"),
+                product_id,
+                quantity,
                 item.get("price")
             ))
+
+            cursor.execute(
+                "UPDATE products SET quantity = quantity - ? WHERE id = ?",
+                (quantity, product_id)
+            )
 
         conn.commit()
         conn.close()
