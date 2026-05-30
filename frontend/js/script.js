@@ -1,5 +1,10 @@
 let lastData = "";
 
+// Fixed capitalization to match the HTML onclick attribute
+function goTo(page) {
+  window.location.href = page;
+}
+
 async function loadStock() {
   try {
     const res = await fetch("http://127.0.0.1:5000/api/dashboard")
@@ -10,9 +15,11 @@ async function loadStock() {
     lastData = newDataString;
 
     const table = document.getElementById("stockTable");
-    table.innerHTML = "";
+    
+    // Build rows in memory first to prevent excessive DOM reflows
+    let tableHTML = "";
 
-    data.forEach(item => {
+    data.recent_products.forEach(item => {
       let status = "";
       let className = "";
 
@@ -27,7 +34,7 @@ async function loadStock() {
         className = "low";
       }
 
-      table.innerHTML += `
+      tableHTML += `
         <tr>
           <td>${item.product_name}</td>
           <td>${item.quantity}</td>
@@ -37,10 +44,14 @@ async function loadStock() {
       `;
     });
 
+    // Inject all rows at once
+    table.innerHTML = tableHTML;
+
   } catch (err) {
     console.error("Error loading stock:", err);
   }
 }
 
+// Initial load and periodic refresh
 loadStock();
 setInterval(loadStock, 5000);
