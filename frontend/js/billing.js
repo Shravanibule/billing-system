@@ -23,10 +23,10 @@ const total_amount = selectedProducts.reduce(
     0
 );
 
-const discount_value = parseFloat(discountEl.value) || 0;
+const discount = parseFloat(discountEl.value) || 0;
 
 const final_amount =
-    total_amount - ((total_amount * discount_value) / 100);
+    total_amount - ((total_amount * discount) / 100);
 
 // ============================================================
 // BILL DATA
@@ -54,17 +54,13 @@ const billData = {
         document.getElementById("payment_mode")
         .value,
 
-    product_name:
-        selectedProducts,
+    products: selectedProducts,
 
-    total_amount:
-        total_amount,
+    total_amount: total_amount,
 
-    discount:
-        discount_value,
+    discount: discount,
 
-    final_amount:
-        final_amount
+    final_amount: final_amount
 };
 
 // ============================================================
