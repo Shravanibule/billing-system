@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+from database.databse import get_connection
 import sqlite3
 
 history_bp = Blueprint("history", __name__)

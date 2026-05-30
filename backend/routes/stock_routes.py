@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from database.databse import get_connection
 import sqlite3
 
 stock_bp = Blueprint("stock", __name__)
