@@ -1,4 +1,4 @@
-from database import get_connection
+from database.databse import get_connection
 
 def add_product(name, quantity, price):
 
