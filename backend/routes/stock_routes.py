@@ -1,12 +1,14 @@
 from flask import Blueprint, request, jsonify
-from models.product_model import add_product, get_all_products
+from database.databse import get_connection
 
 stock_bp = Blueprint("stock", __name__)
 
 
 @stock_bp.route("/api/add-stock", methods=["POST"])
 def add_stock():
+
     try:
+
         data = request.get_json()
 
         product_name = data.get("product_name")
@@ -14,21 +16,45 @@ def add_stock():
         price = data.get("price")
 
         if not product_name:
-            return jsonify({"success": False, "message": "Product name is required"}), 400
+            return jsonify({
+                "success": False,
+                "message": "Product name is required"
+            }), 400
 
-        # Use the product model to insert into the products table
-        add_product(product_name, quantity or 0, price or 0.0)
+        if quantity is None or price is None:
+            return jsonify({
+                "success": False,
+                "message": "Quantity and price are required"
+            }), 400
 
-        return jsonify({"success": True, "message": f"{product_name} added successfully"})
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO products
+            (
+                product_name,
+                quantity,
+                price
+            )
+            VALUES (?, ?, ?)
+        """, (
+            product_name,
+            quantity,
+            price
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "message": f"{product_name} added successfully"
+        })
 
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
 
-
-@stock_bp.route("/api/products", methods=["GET"])
-def list_products():
-    try:
-        products = get_all_products()
-        return jsonify(products)
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500

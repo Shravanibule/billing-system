@@ -1,7 +1,24 @@
 from flask import Blueprint, jsonify
 from database.databse import get_connection
 
-dashboard_bp = Blueprint("dashboard", __name__)
+dashboard_bp = Blueprint("dashboard", _name_)
+
+
+@dashboard_bp.route("/api/products", methods=["GET"])
+def get_all_products():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT id, product_name, quantity, price
+            FROM products
+            ORDER BY product_name
+        """)
+        products = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return jsonify(products)
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
 @dashboard_bp.route("/api/dashboard", methods=["GET"])
